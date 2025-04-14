@@ -18,22 +18,49 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Your awesome title
+title: My Portfolio
 email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-# baseurl: "" # the subpath of your site, e.g. /blog
-# url: "" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
-github_username:  jekyll
+  Welcome to my portfolio website where I showcase my projects and skills.
+baseurl: "/portfolio" # the subpath of your site, e.g. /blog
+url: "https://koennie270993.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+github_username: koennie270993
+skills: Web Developer, Programmer, Designer
+meta_author: Your Name
+keywords: portfolio, web development, programming
+
+# Google webmaster tools
+google_verify:
+
+# Contact form:
+# - static : use static contact form that works without server side code
+# - disqus : replace dynamic contact form by disqus thread
+# - comment the line below if you want to stick with the default PHP contact form
+contact: static
+
+# Freelancer theme settings
+color:
+  primary: 18bc9c #80B3FF
+  primary-rgb: "24,288,156" #"128,179,255"
+  secondary: 2c3e50 #FD6E8A
+  secondary-dark: 233140 #A2122F
+
+# Footer settings
+footer:
+  copyright: Your Name
+  location: Location
+  social: Around the Web
+  credits: About
+
+# Social media profiles
+social:
+  - title: github
+    url: https://github.com/koennie270993
 
 # Build settings
-remote_theme: pages-themes/architect@v0.2.0
+# theme: freelancer-theme-jekyll
 plugins:
   - jekyll-feed
-  - jekyll-remote-theme
 
 # Exclude from processing.
 # The following items will not be processed, by default.
@@ -43,14 +70,15 @@ plugins:
 # Excluded items can be processed by explicitly listing the directories or
 # their entries' file path in the `include:` list.
 #
-# exclude:
-#   - .sass-cache/
-#   - .jekyll-cache/
-#   - gemfiles/
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules/
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - temp-freelancer/
