@@ -1,11 +1,11 @@
 ---
 layout: default
 modal-id: 4
-date: 2025-04-18
+date: 2020-09-15
 img: stormskaters.jpg
 img_folder: storm-skaters
 alt: Stormrunners Snapchat
-project-date: April 2025
+project-date: September 2020
 client: Personal Project
 category: AR Experience Development
 title: Stormrunners Snapchat
