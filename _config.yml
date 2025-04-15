@@ -18,16 +18,17 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: My Portfolio
-email: your-email@example.com
+title: Koen van Rijn
+email: koenvanrijn@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Welcome to my portfolio website where I showcase my projects and skills.
 baseurl: "/portfolio" # the subpath of your site, e.g. /blog
 url: "https://koennie270993.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: koennie270993
-skills: Web Developer, Programmer, Designer
-meta_author: Your Name
-keywords: portfolio, web development, programming
+skills: Web Developer, Programmer, Game Developer
+meta_author: Koen van Rijn
+keywords: portfolio, web development, programming, game development
+future: true # allow posts with future dates
 
 # Google webmaster tools
 google_verify:
