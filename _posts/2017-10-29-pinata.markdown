@@ -1,0 +1,13 @@
+---
+layout: default
+modal-id: 7
+date: 2017-10-29
+img: pinata.png
+img_folder: pinata
+alt: El Jefe Pinata Brawl
+project-date: October 2017
+tech_stack: Unity3D, C#, HTC Vive
+title: El Jefe Pinata Brawl
+description: El Jefe Pinata Brawl
+youtube_id: MMUa--Z8WE0
+--- 

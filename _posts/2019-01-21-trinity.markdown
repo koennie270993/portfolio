@@ -1,0 +1,13 @@
+---
+layout: default
+modal-id: 6
+date: 2019-01-21
+img: trinity.png
+img_folder: trinity
+alt: Trinity
+project-date: Januari 2019
+tech_stack: Unity3D, C#, HTC Vive
+title: Trinity
+description: Trinity
+youtube_id: 2mgt-eCNhfI
+--- 
