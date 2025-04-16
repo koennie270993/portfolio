@@ -25,7 +25,7 @@ description: >- # this means to ignore newlines until "baseurl:"
 baseurl: "/portfolio" # the subpath of your site, e.g. /blog
 url: "https://koennie270993.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: koennie270993
-skills: Web Developer, Programmer, Game Developer
+skills: Game Developer, Programmer, Web Developer
 meta_author: Koen van Rijn
 keywords: portfolio, web development, programming, game development
 future: true # allow posts with future dates
