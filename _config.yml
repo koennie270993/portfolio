@@ -26,6 +26,7 @@ baseurl: "/portfolio" # the subpath of your site, e.g. /blog
 url: "https://koennie270993.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: koennie270993
 skills: Game Developer, TypeScript Developer, Web Developer
+tech_stacks: TypeScript, JavaScript, Node.js, PIXI.js, Git, C++, Unity3D, C#, Python, React, Angular
 meta_author: Koen van Rijn
 keywords: portfolio, web development, programming, game development
 future: true # allow posts with future dates

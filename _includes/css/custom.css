@@ -115,3 +115,11 @@ video::-webkit-media-controls-play-button {
 .navbar-shrink .resume-download:hover {
     background-color: #16a88a;
 } 
+
+/* Tech stacks styling */
+.tech-stacks {
+    display: block;
+    font-size: 1.25em;
+    font-weight: 300;
+    margin-top: 10px;
+} 
