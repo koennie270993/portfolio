@@ -59,6 +59,18 @@ video::-webkit-media-controls-play-button {
     margin-left: 20px !important;
 }
 
+/* Mobile menu resume button fix */
+@media(max-width:767px) {
+    .resume-btn-container {
+        margin-left: 15px !important;
+    }
+    
+    .resume-btn-container a.resume-download {
+        display: inline-block !important;
+        width: auto !important;
+    }
+}
+
 /* Navbar item styling */
 .navbar-nav > li > a {
     padding-top: 15px;
