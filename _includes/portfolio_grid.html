@@ -9,8 +9,8 @@
     </div>
     <div class="portfolio-flex-row">
       {% for post in site.posts %}
-      <div class="portfolio-flex-item portfolio-item">
-        <a href="#portfolioModal-{{ post.modal-id }}" class="portfolio-link" data-toggle="modal">
+      <div class="portfolio-flex-item portfolio-item" data-category="{% if post.category %}{{ post.category }}{% else %}portfolio{% endif %}" data-project-id="{{ post.modal-id }}">
+        <a href="#portfolioModal-{{ post.modal-id }}" class="portfolio-link" data-toggle="modal" data-project-title="{{ post.title }}">
           <div class="caption">
             <div class="caption-content">
               <i class="fa fa-search-plus fa-3x"></i>

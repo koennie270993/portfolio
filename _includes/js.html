@@ -23,6 +23,11 @@
 <!-- Video Player JavaScript -->
 <script src="{{ "/js/video-player.js" | prepend: site.baseurl }}"></script>
 
+{% if site.google_analytics %}
+<!-- Enhanced Analytics Tracking -->
+<script src="{{ "/js/analytics-enhanced.js" | prepend: site.baseurl }}"></script>
+{% endif %}
+
 {% if site.contact == "disqus" %}
 <!-- Disqus Stuff -->
 {% include js_disqus.html %}
