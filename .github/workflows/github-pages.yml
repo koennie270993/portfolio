@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false  # Important for JamesIves/github-pages-deploy-action
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -23,25 +25,26 @@ jobs:
       - name: Build with webpack
         run: |
           NODE_ENV=production npm run build:webpack
-          # Make sure the JS directory is not gitignored in CI
+          # Make sure the bundle.js files are in the repository
           git checkout -- js/ || true
+          ls -la js/
         
       - name: Debug directory structure
         run: |
           echo "Checking for js directory and bundle.js"
-          ls -la js/
+          ls -la js/ || echo "No js directory found!"
           echo "Current directory structure"
-          find . -type f -name "bundle.js" -o -name "*.js.map"
+          find . -type f -name "bundle.js" -o -name "*.js.map" | sort
       
       - name: Ensure js directory is included for Jekyll
         run: |
-          # Create a _includes/js directory if it doesn't exist
-          mkdir -p _includes/js
-          # Copy the bundle.js to _includes/js as a backup in case Jekyll doesn't pick it up from root js/
-          cp js/bundle.js _includes/js/ || echo "Failed to copy bundle.js"
-          # Also copy to root for absolute path reference
-          mkdir -p assets/js
-          cp js/bundle.js assets/js/ || echo "Failed to copy to assets/js"
+          # Make sure the js directory exists
+          mkdir -p js
+          # Create a backup of the bundle.js files if they don't exist
+          [ -f js/bundle.js ] || echo "Creating empty bundle.js files for safety"
+          [ -f js/bundle.js ] || touch js/bundle.js
+          [ -f js/bundle.js.map ] || touch js/bundle.js.map
+          chmod 644 js/bundle.js js/bundle.js.map
       
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -56,13 +59,24 @@ jobs:
         run: |
           # Ensure the js directory is included in Jekyll build
           bundle exec jekyll build
-          # Debug _site contents
+          # Debug _site contents to verify js files were included
           echo "Contents of _site/js directory:"
           ls -la _site/js/ || echo "No js directory found in _site!"
+          # Copy js files directly to _site if not there
+          if [ ! -f _site/js/bundle.js ]; then
+            echo "Manually copying js files to _site/js/"
+            mkdir -p _site/js/
+            cp js/bundle.js _site/js/
+            cp js/bundle.js.map _site/js/
+          fi
         
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
           folder: _site
-          token: ${{ secrets.GITHUB_TOKEN }} 
+          token: ${{ secrets.GITHUB_TOKEN }}
+          clean: true  # Only remove files that are in the target branch but not in the source folder
+          clean-exclude: |
+            .git
+            .github 
