@@ -1,5 +1,5 @@
 // Function to toggle dark mode
-function toggleDarkMode(isDark) {
+function toggleDarkMode(isDark: boolean): void {
   if (isDark) {
     document.body.classList.add('dark-mode');
     localStorage.setItem('theme', 'dark');
@@ -11,7 +11,7 @@ function toggleDarkMode(isDark) {
 
 // On page load, check for saved preferences
 document.addEventListener('DOMContentLoaded', function() {
-  const toggleSwitch = document.querySelector('#checkbox');
+  const toggleSwitch = document.querySelector('#checkbox') as HTMLInputElement;
   const currentTheme = localStorage.getItem('theme');
   
   // Check for saved user preference, if any
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Add event listener for toggle
-  toggleSwitch.addEventListener('change', function(e) {
-    toggleDarkMode(e.target.checked);
+  toggleSwitch.addEventListener('change', function(e: Event) {
+    toggleDarkMode((e.target as HTMLInputElement).checked);
   });
 }); 

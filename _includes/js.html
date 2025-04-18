@@ -1,39 +1,7 @@
-<!-- jQuery Version 1.11.0 -->
-<script src="{{ "/js/jquery-1.11.0.js" | prepend: site.baseurl }}"></script>
-
-<!-- Bootstrap Core JavaScript -->
-<script src="{{ "/js/bootstrap.min.js" | prepend: site.baseurl }}"></script>
-
-<!-- Plugin JavaScript -->
-<script src="{{ "/js/jquery.easing.min.js" | prepend: site.baseurl }}"></script>
-<script src="{{ "/js/classie.js" | prepend: site.baseurl }}"></script>
-<script src="{{ "/js/cbpAnimatedHeader.js" | prepend: site.baseurl }}"></script>
-
-<!-- Contact Form JavaScript -->
-<script src="{{ "/js/jqBootstrapValidation.js" | prepend: site.baseurl }}"></script>
-{% if site.contact == "static" %}
-<script src="{{ "/js/contact_me_static.js" | prepend: site.baseurl }}"></script>
-{% else %}
-<script src="{{ "/js/contact_me.js" | prepend: site.baseurl }}"></script>
-{% endif %}
-
-<!-- Custom Theme JavaScript -->
-<script src="{{ "/js/freelancer.js" | prepend: site.baseurl }}"></script>
-
-<!-- Dark Mode JavaScript -->
-<script src="{{ "/js/dark-mode.js" | prepend: site.baseurl }}"></script>
-
-<!-- Video Player JavaScript -->
-<script src="{{ "/js/video-player.js" | prepend: site.baseurl }}"></script>
-
-{% if site.google_analytics %}
-<!-- Enhanced Analytics Tracking -->
-<script src="{{ "/js/analytics-enhanced.js" | prepend: site.baseurl }}"></script>
-{% endif %}
+<!-- All JavaScript modules are bundled into bundle.js via webpack -->
+<script src="{{ "/js/bundle.js" | prepend: site.baseurl }}"></script>
 
 {% if site.contact == "disqus" %}
 <!-- Disqus Stuff -->
 {% include js_disqus.html %}
-{% endif %} 
-<!-- Image optimization script -->
-<script src="{{ "/js/image-swap.js" | prepend: site.baseurl }}"></script>
+{% endif %}

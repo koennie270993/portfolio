@@ -1,21 +1,33 @@
-$(function() {
+import { jQueryReady } from './lib/jquery-ready';
+
+jQueryReady(($) => {
     // Only apply AJAX form handling if not in static mode
     if ($('#contactForm').attr('data-static') !== 'true') {
-        $("input,textarea").jqBootstrapValidation({
-            preventSubmit: true,
-            submitError: function($form, event, errors) {
-                // additional error messages or events
-            },
-            submitSuccess: function($form, event) {
+        // Setup HTML5 validation
+        const contactForm = document.getElementById('contactForm') as HTMLFormElement;
+        if (contactForm) {
+            // Add required attribute to form fields
+            $("input#name, input#email, input#phone, textarea#message").attr('required', 'required');
+            
+            // Add email validation pattern
+            $("input#email").attr('pattern', '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$');
+            
+            // Add phone validation pattern
+            $("input#phone").attr('pattern', '\\d{10,}');
+            
+            // Handle form submission with AJAX
+            contactForm.addEventListener('submit', function(event) {
                 event.preventDefault(); // prevent default submit behaviour
+                
+                // Form is valid (HTML5 validation passed)
                 // get values from FORM
-                var name = $("input#name").val();
-                var email = $("input#email").val();
-                var phone = $("input#phone").val();
-                var message = $("textarea#message").val();
-                var firstName = name; // For Success/Failure Message
+                const name = $("input#name").val() as string;
+                const email = $("input#email").val() as string;
+                const phone = $("input#phone").val() as string;
+                const message = $("textarea#message").val() as string;
+                let firstName = name; // For Success/Failure Message
                 // Check for white space in name for Success/Fail message
-                if (firstName.indexOf(' ') >= 0) {
+                if (firstName && firstName.indexOf(' ') >= 0) {
                     firstName = name.split(' ').slice(0, -1).join(' ');
                 }
                 $.ajax({
@@ -51,22 +63,18 @@ $(function() {
                         //clear all fields
                         $('#contactForm').trigger("reset");
                     },
-                })
-            },
-            filter: function() {
-                return $(this).is(":visible");
-            },
-        });
+                });
+            });
+        }
     }
 
-    $("a[data-toggle=\"tab\"]").click(function(e) {
+    $("a[data-toggle=\"tab\"]").on('click', function(e) {
         e.preventDefault();
         $(this).tab("show");
     });
-});
-
-
-/*When clicking on Full hide fail/success boxes */
-$('#name').focus(function() {
-    $('#success').html('');
-});
+    
+    /*When clicking on Full hide fail/success boxes */
+    $('#name').on('focus', function() {
+        $('#success').html('');
+    });
+}); 

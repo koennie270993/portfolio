@@ -1,5 +1,140 @@
-const fs = require('fs');
-const path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
+
+// Define the directory where images are stored
+const imgDir = path.join(__dirname, '..', 'img');
+
+// Function to update image references in HTML files
+export function updateImageReferences(htmlFiles: string[] = []): void {
+  console.log('Starting image reference update...');
+  
+  // First, get all images in the img directory
+  if (!fs.existsSync(imgDir)) {
+    console.error(`Image directory not found: ${imgDir}`);
+    return;
+  }
+  
+  // Find all images recursively
+  const images = findImages(imgDir);
+  console.log(`Found ${images.length} images.`);
+  
+  // If no HTML files are provided, find all HTML files in the project
+  if (htmlFiles.length === 0) {
+    const rootDir = path.join(__dirname, '..');
+    htmlFiles = findHtmlFiles(rootDir);
+  }
+  
+  console.log(`Processing ${htmlFiles.length} HTML files.`);
+  
+  // Process each HTML file
+  for (const htmlFile of htmlFiles) {
+    updateImageReferencesInFile(htmlFile, images);
+  }
+  
+  console.log('Image reference update complete!');
+}
+
+// Function to recursively find all images
+function findImages(dir: string): string[] {
+  let results: string[] = [];
+  const files = fs.readdirSync(dir);
+  
+  for (const file of files) {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+    
+    if (stat.isDirectory()) {
+      // Recursively search directories
+      results = results.concat(findImages(filePath));
+    } else if (/\.(jpe?g|png|gif|svg|webp)$/i.test(file)) {
+      // Add image files
+      results.push(filePath);
+    }
+  }
+  
+  return results;
+}
+
+// Function to find all HTML files
+function findHtmlFiles(dir: string): string[] {
+  let results: string[] = [];
+  const files = fs.readdirSync(dir);
+  
+  for (const file of files) {
+    const filePath = path.join(dir, file);
+    
+    // Skip node_modules and dist folders
+    if (file === 'node_modules' || file === 'dist' || file === '.git') {
+      continue;
+    }
+    
+    const stat = fs.statSync(filePath);
+    
+    if (stat.isDirectory()) {
+      // Recursively search directories
+      results = results.concat(findHtmlFiles(filePath));
+    } else if (/\.html?$/i.test(file)) {
+      // Add HTML files
+      results.push(filePath);
+    }
+  }
+  
+  return results;
+}
+
+// Function to update image references in a specific file
+function updateImageReferencesInFile(htmlFile: string, images: string[]): void {
+  console.log(`Processing: ${htmlFile}`);
+  
+  // Read the HTML file
+  let html = fs.readFileSync(htmlFile, 'utf8');
+  let changesMade = false;
+  
+  // Create a map of image names to paths for quicker lookup
+  const imageMap: Record<string, string> = {};
+  for (const image of images) {
+    const imageName = path.basename(image);
+    imageMap[imageName] = image;
+  }
+  
+  // Regular expression to find image references
+  const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
+  let match;
+  
+  while ((match = imgRegex.exec(html)) !== null) {
+    const fullTag = match[0];
+    const src = match[1];
+    
+    // Skip external URLs
+    if (src.startsWith('http') || src.startsWith('//')) {
+      continue;
+    }
+    
+    // Get the image filename
+    const imageName = path.basename(src);
+    
+    // Check if the image exists in our map
+    if (imageMap[imageName]) {
+      const newSrc = path.relative(path.dirname(htmlFile), imageMap[imageName]).replace(/\\/g, '/');
+      
+      // Only update if the path is different
+      if (newSrc !== src) {
+        const newTag = fullTag.replace(src, newSrc);
+        html = html.replace(fullTag, newTag);
+        changesMade = true;
+        console.log(`  Updated: ${src} → ${newSrc}`);
+      }
+    }
+  }
+  
+  // Save the file if changes were made
+  if (changesMade) {
+    fs.writeFileSync(htmlFile, html);
+    console.log(`  Changes saved to ${htmlFile}`);
+  } else {
+    console.log(`  No changes needed for ${htmlFile}`);
+  }
+}
 
 // Create a simple mapping of original images to optimized versions
 function createImageMap() {
@@ -45,8 +180,8 @@ function createPreloadHtml(imageMap) {
   // Sort by file size (we get the biggest wins from preloading large images)
   const sortedEntries = filteredMap.sort((a, b) => {
     try {
-      const aPath = path.join(__dirname, '..', a[1]);
-      const bPath = path.join(__dirname, '..', b[1]);
+      const aPath = path.join(__dirname, '..', a[1] as string);
+      const bPath = path.join(__dirname, '..', b[1] as string);
       const aSize = fs.statSync(aPath).size;
       const bSize = fs.statSync(bPath).size;
       return bSize - aSize;  // Descending order

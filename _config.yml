@@ -87,3 +87,12 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
   - temp-freelancer/
+  - src/
+  - dist/
+  - tsconfig.json
+  - webpack.config.js
+  - package.json
+  - package-lock.json
+ 
+include:
+  - js/

@@ -8,6 +8,9 @@
  * Copyright 2013, Codrops
  * http://www.codrops.com
  */
+
+import { classie } from './classie';
+
 var cbpAnimatedHeader = (function() {
 
 	var docElem = document.documentElement,
@@ -42,3 +45,5 @@ var cbpAnimatedHeader = (function() {
 	init();
 
 })();
+
+export default cbpAnimatedHeader;

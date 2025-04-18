@@ -1,8 +1,8 @@
-const fs = require('fs');
-const path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Function to recursively find and delete backup files
-function deleteBackupFiles(dir) {
+export function deleteBackupFiles(dir: string): number {
   let deleted = 0;
   
   // Get all files in directory
@@ -27,7 +27,7 @@ function deleteBackupFiles(dir) {
 }
 
 // Main function
-function main() {
+export function runBackupCleanup(): void {
   console.log('Starting backup file cleanup...');
   
   // Clean up img directory
@@ -42,5 +42,5 @@ function main() {
   console.log('Cleanup complete!');
 }
 
-// Run the main function
-main(); 
+// Export functions but don't run automatically
+// This allows index.ts to import and run when needed 
