@@ -44,8 +44,28 @@ jobs:
       - name: Build Jekyll site
         run: bundle exec jekyll build
 
+      - name: Ensure bundle files are copied
+        run: |
+          # Make sure _site/js directory exists
+          mkdir -p _site/js
+          # Copy all bundle files to _site/js
+          cp -v js/bundle.js* _site/js/
+          # Set proper permissions
+          chmod 644 _site/js/bundle.js*
+
       - name: List site files
         run: find ./_site -type f | sort
+
+      - name: Check file permissions and details
+        run: |
+          echo "Checking js bundle files with detailed info:"
+          ls -la _site/js/
+          echo "Checking file types:"
+          file _site/js/bundle.js*
+          echo "Checking file permissions:"
+          stat _site/js/bundle.js*
+          echo "Contents of js directory in repo:"
+          ls -la js/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
@@ -54,3 +74,12 @@ jobs:
           folder: _site
           token: ${{ secrets.GITHUB_TOKEN }}
           clean: true
+
+      - name: Check deployed files 
+        run: |
+          echo "Checking what was actually deployed to gh-pages branch"
+          git clone -b gh-pages https://github.com/${{ github.repository }}.git gh-pages-clone
+          echo "Contents of js directory in deployed site:"
+          ls -la gh-pages-clone/js/ || echo "No js directory found in deployed site"
+          echo "Checking for bundle files:"
+          find gh-pages-clone -name "bundle.js*" || echo "No bundle files found in deployed site"
