@@ -1,11 +1,47 @@
 <!-- All JavaScript modules are bundled into bundle.js via webpack -->
 <script>
-console.log('Base URL: {{ site.baseurl }}');
-console.log('Loading bundle from: {{ site.baseurl }}/js/bundle.js');
+// Detailed debugging info
+console.log('Document readyState:', document.readyState);
+console.log('Base URL:', '{{ site.baseurl }}');
+console.log('Full bundle URL:', '{{ site.baseurl }}/js/bundle.js');
+console.log('Navigator:', navigator.userAgent);
 </script>
 
-<!-- Direct include of bundle.js -->
-<script src="{{ site.baseurl }}/js/bundle.js"></script>
+<!-- Direct include of bundle.js with script injection -->
+<script>
+var bundleLoaded = false;
+
+// Create and inject the script
+var bundleScript = document.createElement('script');
+bundleScript.src = '{{ site.baseurl }}/js/bundle.js';
+bundleScript.onload = function() {
+  bundleLoaded = true;
+  console.log('Bundle loaded successfully!');
+  
+  setTimeout(function() {
+    if (typeof jQuery !== 'undefined') {
+      console.log('jQuery is loaded and available in window context:', jQuery.fn.jquery);
+    } else {
+      console.error('jQuery was not found in window context after script loaded');
+    }
+  }, 500);
+};
+bundleScript.onerror = function(e) {
+  console.error('Error loading bundle.js:', e);
+};
+
+document.body.appendChild(bundleScript);
+
+// Verify loading state after page load
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    console.log('Final bundle loaded state:', bundleLoaded);
+    if (!bundleLoaded) {
+      console.error('Bundle never reported as loaded after 2 seconds');
+    }
+  }, 2000);
+});
+</script>
 
 {% if site.contact == "disqus" %}
 <!-- Disqus Stuff -->
