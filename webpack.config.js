@@ -1,4 +1,5 @@
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -18,7 +19,22 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'js'),
+    clean: true, // Clear the output directory before each build
   },
-  // Generate source maps for better debugging
-  devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map'
+  // Only generate source maps in development mode
+  devtool: process.env.NODE_ENV === 'production' ? false : 'source-map',
+  // Configure optimization to ensure license comments are extracted
+  optimization: {
+    minimize: process.env.NODE_ENV === 'production',
+    minimizer: [
+      new TerserPlugin({
+        extractComments: true,
+        terserOptions: {
+          format: {
+            comments: /@license|@preserve|Copyright|license|License/i,
+          },
+        },
+      }),
+    ],
+  },
 }; 

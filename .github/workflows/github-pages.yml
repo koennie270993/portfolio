@@ -25,7 +25,8 @@ jobs:
       
       - name: Build with webpack
         run: |
-          NODE_ENV=production npm run build:webpack
+          # Build in production mode - no source maps will be generated
+          npm run build:webpack
           echo "TypeScript bundle built successfully"
           ls -la js/ || echo "No js directory found"
           
@@ -43,41 +44,41 @@ jobs:
         
       - name: Build Jekyll site
         run: bundle exec jekyll build
-
-      - name: Ensure bundle files are copied
-        run: |
-          # Make sure _site/js directory exists
-          mkdir -p _site/js
-          # Copy all bundle files to _site/js
-          cp -v js/bundle.js* _site/js/
-          # Set proper permissions
-          chmod 644 _site/js/bundle.js*
-
-      - name: List site files
+      
+      - name: List site files before copying JS
         run: find ./_site -type f | sort
 
-      - name: Check file permissions and details
+      # Create deployment directory that combines Jekyll _site with our JS files
+      - name: Prepare deployment directory
         run: |
-          echo "Checking js bundle files with detailed info:"
-          ls -la _site/js/
-          echo "Checking file types:"
-          file _site/js/bundle.js*
-          echo "Checking file permissions:"
-          stat _site/js/bundle.js*
-          echo "Contents of js directory in repo:"
-          ls -la js/
+          # Create a deployment directory
+          mkdir -p ./deploy
+          
+          # Copy everything from _site into deploy
+          cp -r ./_site/* ./deploy/
+          
+          # Ensure js directory exists
+          mkdir -p ./deploy/js
+          
+          # Copy JS files to the deployment directory
+          cp -v js/bundle.js ./deploy/js/
+          cp -v js/bundle.js.LICENSE.txt ./deploy/js/ || echo "No LICENSE file found"
+          
+          # List what we're about to deploy
+          echo "Files to be deployed:"
+          find ./deploy -type f | sort
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: _site
+          folder: deploy
           token: ${{ secrets.GITHUB_TOKEN }}
           clean: true
 
-      - name: Check deployed files 
+      - name: Verify deployment
         run: |
-          echo "Checking what was actually deployed to gh-pages branch"
+          echo "Checking what was deployed to gh-pages branch"
           git clone -b gh-pages https://github.com/${{ github.repository }}.git gh-pages-clone
           echo "Contents of js directory in deployed site:"
           ls -la gh-pages-clone/js/ || echo "No js directory found in deployed site"
