@@ -27,8 +27,28 @@ jobs:
         run: |
           NODE_ENV=production npm run build:webpack
           echo "TypeScript bundle built successfully"
-          mkdir -p assets/js
+          echo "Checking bundle.js files in assets/js:"
           ls -la assets/js/ || echo "No assets/js directory found"
+          
+          # Make sure the directory exists
+          mkdir -p assets/js
+      
+      - name: Prepare project for Jekyll
+        run: |
+          # Create additional asset structure if needed
+          mkdir -p assets/js
+          
+          # Show project structure
+          echo "Project directory structure:"
+          find . -type f -name "bundle.js" | sort
+          
+          # Check permissions on the bundle.js file
+          if [ -f assets/js/bundle.js ]; then
+            chmod 644 assets/js/bundle.js
+            echo "Bundle.js permissions updated"
+          else
+            echo "WARNING: bundle.js not found in assets/js/"
+          fi
       
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -39,31 +59,43 @@ jobs:
       - name: Install Jekyll dependencies
         run: bundle install
       
-      - name: Update Jekyll configuration
-        run: |
-          # Ensure js directory is properly configured for Jekyll
-          echo "Making sure assets/js directory is included in Jekyll build"
-          cat _config.yml | grep "include:" -A 10
-          
       - name: Build Jekyll site
         run: |
-          # Force-include js directory in Jekyll build
-          bundle exec jekyll build --trace
+          # Show Jekyll configuration
+          echo "Jekyll include/exclude settings:"
+          cat _config.yml | grep -A 20 "include:"
+          
+          # Build the site
+          JEKYLL_ENV=production bundle exec jekyll build --verbose
           
           # Verify the bundle.js was included
-          echo "Verifying bundle.js was included in the build:"
+          echo "Checking for bundle.js in _site:"
           find _site -name "bundle.js" || echo "bundle.js not found in _site!"
           
-          # Make sure the target directory exists in _site
-          mkdir -p _site/assets/js/
+          # If bundle.js wasn't included by Jekyll, force copy it to the right location
+          if [ ! -f _site/assets/js/bundle.js ]; then
+            echo "Manually copying bundle.js to _site/assets/js/"
+            mkdir -p _site/assets/js/
+            cp -v assets/js/bundle.js _site/assets/js/ || echo "Failed to copy bundle.js"
+            cp -v assets/js/bundle.js.map _site/assets/js/ || echo "Failed to copy bundle.js.map"
+          fi
           
-          # Force copy the bundle files to the _site directory
-          echo "Ensuring bundle.js files are in the _site directory:"
-          cp -f assets/js/bundle.js _site/assets/js/ || echo "No bundle.js found in assets/js/"
-          cp -f assets/js/bundle.js.map _site/assets/js/ || echo "No source map found"
+          # Verify _site structure
+          echo "_site directory structure:"
+          find _site -type d | sort
+      
+      - name: Check final build
+        run: |
+          # Final check of the _site directory
+          echo "Final check of _site/assets/js:"
+          ls -la _site/assets/js/ || echo "No assets/js directory in _site!"
           
-          # Verify the copied files
-          ls -la _site/assets/js/ || echo "No assets/js directory in _site"
+          # Create the directory and copy files if still missing
+          if [ ! -d _site/assets/js ]; then
+            echo "Creating _site/assets/js directory and copying files as a last resort"
+            mkdir -p _site/assets/js
+            cp -v assets/js/bundle.js _site/assets/js/ || echo "Failed to copy bundle.js as last resort"
+          fi
       
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
