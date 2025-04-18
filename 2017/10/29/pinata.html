@@ -855,50 +855,10 @@
 console.log('Base URL: /portfolio');
 console.log('Site URL: https://koennie270993.github.io');
 console.log('Loading bundle from: /portfolio/assets/js/bundle.js');
-
-// Attempt to load the bundle with fallbacks
-function loadBundle() {
-  const paths = [
-    '/portfolio/assets/js/bundle.js',
-    '/portfolio/assets/js/bundle.js',
-    'https://koennie270993.github.io/portfolio/assets/js/bundle.js'
-  ];
-  
-  let loaded = false;
-  
-  function tryNextScript(index) {
-    if (index >= paths.length) {
-      console.error('Failed to load bundle from any path');
-      return;
-    }
-    
-    const script = document.createElement('script');
-    script.src = paths[index];
-    
-    script.onload = function() {
-      console.log('Successfully loaded bundle from:', paths[index]);
-      loaded = true;
-    };
-    
-    script.onerror = function() {
-      console.warn('Failed to load bundle from:', paths[index]);
-      tryNextScript(index + 1);
-    };
-    
-    document.body.appendChild(script);
-  }
-  
-  // Start trying paths
-  tryNextScript(0);
-}
-
-// Load script after DOM is ready
-if (document.readyState !== 'loading') {
-  loadBundle();
-} else {
-  document.addEventListener('DOMContentLoaded', loadBundle);
-}
 </script>
+
+<!-- Direct script include for bundle.js -->
+<script src="/portfolio/assets/js/bundle.js"></script>
 
 
 
