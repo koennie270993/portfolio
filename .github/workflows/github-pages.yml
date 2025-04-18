@@ -27,7 +27,8 @@ jobs:
         run: |
           NODE_ENV=production npm run build:webpack
           echo "TypeScript bundle built successfully"
-          ls -la js/
+          mkdir -p assets/js
+          ls -la assets/js/ || echo "No assets/js directory found"
       
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -41,7 +42,7 @@ jobs:
       - name: Update Jekyll configuration
         run: |
           # Ensure js directory is properly configured for Jekyll
-          echo "Making sure js directory is included in Jekyll build"
+          echo "Making sure assets/js directory is included in Jekyll build"
           cat _config.yml | grep "include:" -A 10
           
       - name: Build Jekyll site
@@ -54,15 +55,15 @@ jobs:
           find _site -name "bundle.js" || echo "bundle.js not found in _site!"
           
           # Make sure the target directory exists in _site
-          mkdir -p _site/js/
+          mkdir -p _site/assets/js/
           
           # Force copy the bundle files to the _site directory
           echo "Ensuring bundle.js files are in the _site directory:"
-          cp -f js/bundle.js _site/js/
-          cp -f js/bundle.js.map _site/js/ || echo "No source map found"
+          cp -f assets/js/bundle.js _site/assets/js/ || echo "No bundle.js found in assets/js/"
+          cp -f assets/js/bundle.js.map _site/assets/js/ || echo "No source map found"
           
           # Verify the copied files
-          ls -la _site/js/
+          ls -la _site/assets/js/ || echo "No assets/js directory in _site"
       
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4

@@ -3,14 +3,14 @@
 // Diagnostic script to help debug path issues
 console.log('Base URL: {{ site.baseurl }}');
 console.log('Site URL: {{ site.url }}');
-console.log('Loading bundle from: {{ site.baseurl }}/js/bundle.js');
+console.log('Loading bundle from: {{ site.baseurl }}/assets/js/bundle.js');
 
 // Attempt to load the bundle with fallbacks
 function loadBundle() {
   const paths = [
-    '{{ site.baseurl }}/js/bundle.js',
-    '/portfolio/js/bundle.js',
-    'https://koennie270993.github.io/portfolio/js/bundle.js'
+    '{{ site.baseurl }}/assets/js/bundle.js',
+    '/portfolio/assets/js/bundle.js',
+    'https://koennie270993.github.io/portfolio/assets/js/bundle.js'
   ];
   
   let loaded = false;

@@ -17,7 +17,7 @@ module.exports = {
   },
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'js'),
+    path: path.resolve(__dirname, 'assets/js'),
   },
   // Generate source maps for better debugging
   devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map'
