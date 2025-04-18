@@ -98,17 +98,9 @@ include:
   - js/
   - js/bundle.js
   - js/bundle.js.map
-  - assets/
-  - assets/js/
-  - assets/js/bundle.js
-  - assets/js/bundle.js.map
 
 # Ensure these files are kept during site generation
 keep_files:
   - js/
   - js/bundle.js
   - js/bundle.js.map
-  - assets/
-  - assets/js/
-  - assets/js/bundle.js
-  - assets/js/bundle.js.map

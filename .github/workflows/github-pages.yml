@@ -27,28 +27,7 @@ jobs:
         run: |
           NODE_ENV=production npm run build:webpack
           echo "TypeScript bundle built successfully"
-          echo "Checking bundle.js files in assets/js:"
-          ls -la assets/js/ || echo "No assets/js directory found"
-          
-          # Make sure the directory exists
-          mkdir -p assets/js
-      
-      - name: Prepare project for Jekyll
-        run: |
-          # Create additional asset structure if needed
-          mkdir -p assets/js
-          
-          # Show project structure
-          echo "Project directory structure:"
-          find . -type f -name "bundle.js" | sort
-          
-          # Check permissions on the bundle.js file
-          if [ -f assets/js/bundle.js ]; then
-            chmod 644 assets/js/bundle.js
-            echo "Bundle.js permissions updated"
-          else
-            echo "WARNING: bundle.js not found in assets/js/"
-          fi
+          ls -la js/ || echo "No js directory found"
       
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -58,64 +37,20 @@ jobs:
       
       - name: Install Jekyll dependencies
         run: bundle install
-      
+        
       - name: Build Jekyll site
         run: |
-          # Show Jekyll configuration
-          echo "Jekyll include/exclude settings:"
-          cat _config.yml | grep -A 20 "include:"
+          bundle exec jekyll build
+          echo "Site built, checking for JS files:"
+          find _site -name "bundle.js" || echo "No bundle.js found in _site!"
+          ls -la _site/js/ || echo "No js directory in _site!"
           
-          # Build the site
-          JEKYLL_ENV=production bundle exec jekyll build --verbose
-          
-          # Verify the bundle.js was included
-          echo "Checking for bundle.js in _site:"
-          find _site -name "bundle.js" || echo "bundle.js not found in _site!"
-          
-          # Check for nested portfolio directory
-          if [ -d "_site/portfolio" ]; then
-            echo "FOUND NESTED PORTFOLIO DIRECTORY - fixing directory structure"
-            # Ensure assets exist in both places
-            mkdir -p _site/portfolio/assets/js/
-            cp -v assets/js/bundle.js _site/portfolio/assets/js/ || echo "Failed to copy to nested dir"
+          # If bundle.js wasn't copied, do it manually
+          if [ ! -f _site/js/bundle.js ]; then
+            echo "Manually copying bundle.js to _site/js/"
+            mkdir -p _site/js/
+            cp -v js/bundle.js _site/js/ || echo "Failed to copy bundle.js"
           fi
-          
-          # If bundle.js wasn't included by Jekyll, force copy it to the right location
-          if [ ! -f _site/assets/js/bundle.js ]; then
-            echo "Manually copying bundle.js to _site/assets/js/"
-            mkdir -p _site/assets/js/
-            cp -v assets/js/bundle.js _site/assets/js/ || echo "Failed to copy bundle.js"
-            cp -v assets/js/bundle.js.map _site/assets/js/ || echo "Failed to copy bundle.js.map"
-          fi
-          
-          # Verify _site structure
-          echo "_site directory structure:"
-          find _site -type d | sort
-      
-      - name: Check final build
-        run: |
-          # Final check of the _site directory
-          echo "Final check of _site/assets/js:"
-          ls -la _site/assets/js/ || echo "No assets/js directory in _site!"
-          
-          # Create the directory and copy files if still missing
-          if [ ! -d _site/assets/js ]; then
-            echo "Creating _site/assets/js directory and copying files as a last resort"
-            mkdir -p _site/assets/js
-            cp -v assets/js/bundle.js _site/assets/js/ || echo "Failed to copy bundle.js as last resort"
-          fi
-          
-          # Handle potential nested structure
-          echo "Checking for nested portfolio directory:"
-          if [ -d "_site/portfolio" ]; then
-            echo "Ensuring assets in nested portfolio directory"
-            mkdir -p _site/portfolio/assets/js/
-            cp -v assets/js/bundle.js _site/portfolio/assets/js/ || echo "Failed to copy to nested structure"
-          fi
-          
-          # List final directory structure for debugging
-          echo "Final directory structure of _site:"
-          find _site -type d -o -name "bundle.js" | sort
       
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
