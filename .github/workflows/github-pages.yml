@@ -72,6 +72,14 @@ jobs:
           echo "Checking for bundle.js in _site:"
           find _site -name "bundle.js" || echo "bundle.js not found in _site!"
           
+          # Check for nested portfolio directory
+          if [ -d "_site/portfolio" ]; then
+            echo "FOUND NESTED PORTFOLIO DIRECTORY - fixing directory structure"
+            # Ensure assets exist in both places
+            mkdir -p _site/portfolio/assets/js/
+            cp -v assets/js/bundle.js _site/portfolio/assets/js/ || echo "Failed to copy to nested dir"
+          fi
+          
           # If bundle.js wasn't included by Jekyll, force copy it to the right location
           if [ ! -f _site/assets/js/bundle.js ]; then
             echo "Manually copying bundle.js to _site/assets/js/"
@@ -96,6 +104,18 @@ jobs:
             mkdir -p _site/assets/js
             cp -v assets/js/bundle.js _site/assets/js/ || echo "Failed to copy bundle.js as last resort"
           fi
+          
+          # Handle potential nested structure
+          echo "Checking for nested portfolio directory:"
+          if [ -d "_site/portfolio" ]; then
+            echo "Ensuring assets in nested portfolio directory"
+            mkdir -p _site/portfolio/assets/js/
+            cp -v assets/js/bundle.js _site/portfolio/assets/js/ || echo "Failed to copy to nested structure"
+          fi
+          
+          # List final directory structure for debugging
+          echo "Final directory structure of _site:"
+          find _site -type d -o -name "bundle.js" | sort
       
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
