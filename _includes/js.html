@@ -1,4 +1,10 @@
 <!-- All JavaScript modules are bundled into bundle.js via webpack -->
+<script>
+// Diagnostic script to help debug path issues
+console.log('Base URL: {{ site.baseurl }}');
+console.log('Site URL: {{ site.url }}');
+console.log('Bundle path: {{ "/js/bundle.js" | prepend: site.baseurl }}');
+</script>
 <script src="{{ "/js/bundle.js" | prepend: site.baseurl }}"></script>
 
 {% if site.contact == "disqus" %}
