@@ -3,9 +3,9 @@
 // Diagnostic script to help debug path issues
 console.log('Base URL: {{ site.baseurl }}');
 console.log('Site URL: {{ site.url }}');
-console.log('Bundle path: {{ "/js/bundle.js" | prepend: site.baseurl }}');
+console.log('Loading bundle from: {{ site.baseurl }}/js/bundle.js');
 </script>
-<!-- Direct script include - for reliability -->
+<!-- The bundle.js file is compiled by webpack during the build process -->
 <script src="{{ site.baseurl }}/js/bundle.js"></script>
 
 {% if site.contact == "disqus" %}

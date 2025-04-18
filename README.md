@@ -24,12 +24,12 @@ The build and deployment process is automated through GitHub Actions:
 - Jekyll builds the static site
 - Site is deployed to GitHub Pages
 
-No need to commit built files (`js/` directory) as they are generated during the CI/CD pipeline.
+All build artifacts are generated during the CI/CD pipeline - no need to commit any compiled files.
 
 ### Manual Build
 
 If you want to build locally:
 ```
-npm run build:webpack
-bundle exec jekyll build
+npm run build:webpack  # Compile TypeScript
+bundle exec jekyll build  # Build Jekyll site
 ```
