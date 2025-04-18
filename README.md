@@ -24,7 +24,7 @@ The build and deployment process is automated through GitHub Actions:
 - Jekyll builds the static site
 - Site is deployed to GitHub Pages
 
-All build artifacts are generated during the CI/CD pipeline - no need to commit any compiled files.
+**Note:** Currently, the bundle.js file is temporarily committed to the repository (in assets/js/) to ensure GitHub Pages compatibility. We'll revisit the CI/CD approach later.
 
 ### Manual Build
 
