@@ -53,13 +53,16 @@ jobs:
           echo "Verifying bundle.js was included in the build:"
           find _site -name "bundle.js" || echo "bundle.js not found in _site!"
           
-          # If bundle.js wasn't included, copy it manually
-          if [ ! -f _site/js/bundle.js ]; then
-            echo "Manually copying bundle.js to _site/js/"
-            mkdir -p _site/js/
-            cp js/bundle.js _site/js/
-            cp js/bundle.js.map _site/js/ || echo "No source map found"
-          fi
+          # Make sure the target directory exists in _site
+          mkdir -p _site/js/
+          
+          # Force copy the bundle files to the _site directory
+          echo "Ensuring bundle.js files are in the _site directory:"
+          cp -f js/bundle.js _site/js/
+          cp -f js/bundle.js.map _site/js/ || echo "No source map found"
+          
+          # Verify the copied files
+          ls -la _site/js/
       
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
