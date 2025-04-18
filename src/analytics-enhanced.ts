@@ -65,6 +65,23 @@ export function trackExternalLink(link: HTMLAnchorElement): void {
   }
 }
 
+// Track post clicks
+export function trackPostClick(link: HTMLAnchorElement): void {
+  try {
+    // Get post title from data attribute or fallback to link text
+    const postTitle = link.getAttribute('data-project-title') || link.textContent || 'Unnamed post';
+    const projectId = link.getAttribute('href')?.replace('#portfolioModal-', '') || 'unknown';
+    
+    gtag('event', 'post_click', {
+      'event_category': 'Posts',
+      'event_label': postTitle,
+      'project_id': projectId
+    });
+  } catch (error) {
+    console.error('Analytics error:', error);
+  }
+}
+
 // Track portfolio item views
 export function trackPortfolioItemView(item: HTMLElement): void {
   try {
@@ -155,6 +172,13 @@ export function initializeEnhancedAnalytics(): void {
     document.querySelectorAll('button, .btn').forEach(button => {
       button.addEventListener('click', function() {
         trackButtonClick(this as HTMLElement);
+      });
+    });
+    
+    // Add post click tracking
+    document.querySelectorAll('.portfolio-link').forEach(link => {
+      link.addEventListener('click', function() {
+        trackPostClick(this as HTMLAnchorElement);
       });
     });
     
