@@ -855,8 +855,40 @@
 console.log('Base URL: /portfolio');
 console.log('Site URL: https://koennie270993.github.io');
 console.log('Bundle path: /portfolio/js/bundle.js');
+
+// This function tries to load the bundle from various paths
+function loadBundle() {
+  var paths = [
+    '/portfolio/js/bundle.js',
+    '/portfolio/assets/js/bundle.js',
+    '/portfolio/_includes/js/bundle.js',
+    '/portfolio/js/bundle.js'
+  ];
+  
+  function tryNextPath(index) {
+    if (index >= paths.length) {
+      console.error('Failed to load bundle.js from any path');
+      return;
+    }
+    
+    var script = document.createElement('script');
+    script.src = paths[index];
+    script.onerror = function() {
+      console.log('Failed to load from path: ' + paths[index]);
+      tryNextPath(index + 1);
+    };
+    script.onload = function() {
+      console.log('Successfully loaded bundle from: ' + paths[index]);
+    };
+    document.body.appendChild(script);
+  }
+  
+  tryNextPath(0);
+}
+
+// Load the bundle after the page has loaded
+window.addEventListener('load', loadBundle);
 </script>
-<script src="/portfolio/js/bundle.js"></script>
 
 
 
