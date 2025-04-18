@@ -851,54 +851,12 @@
  
   <!-- All JavaScript modules are bundled into bundle.js via webpack -->
 <script>
-// Diagnostic script to help debug path issues
 console.log('Base URL: /portfolio');
-console.log('Site URL: https://koennie270993.github.io');
-console.log('Attempting various paths for bundle.js:');
+console.log('Loading bundle from: /portfolio/js/bundle.js');
 </script>
 
-<!-- Try multiple potential paths for bundle.js -->
-<script>
-// Try to load the bundle from various possible paths
-function tryLoadScript(paths, index) {
-  if (index >= paths.length) {
-    console.error('Failed to load bundle.js from any path');
-    return;
-  }
-  
-  const path = paths[index];
-  console.log('Trying to load from:', path);
-  
-  const script = document.createElement('script');
-  script.src = path;
-  
-  script.onload = function() {
-    console.log('Successfully loaded bundle.js from:', path);
-  };
-  
-  script.onerror = function() {
-    console.log('Failed to load from:', path);
-    tryLoadScript(paths, index + 1);
-  };
-  
-  document.body.appendChild(script);
-}
-
-// Define all possible paths to try
-const paths = [
-  '/portfolio/assets/js/bundle.js',
-  '/portfolio/assets/js/bundle.js',
-  '/assets/js/bundle.js',
-  '/portfolio/portfolio/assets/js/bundle.js',
-  'https://koennie270993.github.io/portfolio/assets/js/bundle.js',
-  'https://koennie270993.github.io/portfolio/portfolio/assets/js/bundle.js'
-];
-
-// Try to load the bundle when the page is ready
-document.addEventListener('DOMContentLoaded', function() {
-  tryLoadScript(paths, 0);
-});
-</script>
+<!-- Direct include of bundle.js -->
+<script src="/portfolio/js/bundle.js"></script>
 
 
 
