@@ -42,28 +42,11 @@ jobs:
         run: bundle install
         
       - name: Build Jekyll site
-        run: |
-          # Make sure bundle.js is in place BEFORE Jekyll builds
-          if [ ! -f js/bundle.js ]; then
-            echo "ERROR: bundle.js not found before Jekyll build!"
-            exit 1
-          fi
-          
-          bundle exec jekyll build
-          
-          echo "Site built, checking for JS files:"
-          find _site -name "bundle.js" || echo "No bundle.js found in _site!"
-          
-          # If bundle.js wasn't copied, do it manually
-          if [ ! -f _site/js/bundle.js ]; then
-            echo "Manually copying bundle.js to _site/js/"
-            mkdir -p _site/js/
-            cp -v js/bundle.js _site/js/ || echo "Failed to copy bundle.js"
-          fi
-          
-          # Add a visible marker file to verify deployment
-          echo "Deployed on $(date)" > _site/js/deploy-marker.txt
-      
+        run: bundle exec jekyll build
+
+      - name: List site files
+        run: find ./_site -type f | sort
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
@@ -71,17 +54,3 @@ jobs:
           folder: _site
           token: ${{ secrets.GITHUB_TOKEN }}
           clean: true
-          
-      - name: Verify deployment
-        run: |
-          # Wait for GitHub Pages to update
-          echo "Waiting 30 seconds for GitHub Pages to update..."
-          sleep 30
-          
-          # Check if the bundle.js file is accessible
-          echo "Checking if bundle.js is accessible via curl:"
-          curl -sSf https://koennie270993.github.io/portfolio/js/bundle.js -o /dev/null || echo "ERROR: bundle.js not accessible!"
-          
-          # Check if the marker file is accessible
-          echo "Checking if marker file is accessible:"
-          curl -sSf https://koennie270993.github.io/portfolio/js/deploy-marker.txt || echo "ERROR: marker file not accessible!" 
