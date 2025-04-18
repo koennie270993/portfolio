@@ -7,11 +7,6 @@ Gemfile.lock
 temp-freelancer/
 node_modules/
 
-# Build output
-dist/
-build/
-js/
-
 # TypeScript cache
 *.tsbuildinfo
 
