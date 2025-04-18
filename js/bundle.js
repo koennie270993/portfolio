@@ -11315,6 +11315,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (() => {
 
 function toggleDarkMode(isDark) {
+    console.log('Toggling dark mode:', isDark);
     if (isDark) {
         document.body.classList.add('dark-mode');
         localStorage.setItem('theme', 'dark');
@@ -11324,24 +11325,49 @@ function toggleDarkMode(isDark) {
         localStorage.setItem('theme', 'light');
     }
 }
-document.addEventListener('DOMContentLoaded', function () {
+function initDarkMode() {
+    console.log('Initializing dark mode...');
     const toggleSwitch = document.querySelector('#checkbox');
+    if (!toggleSwitch) {
+        console.error('Dark mode toggle not found in DOM');
+        setTimeout(initDarkMode, 500);
+        return;
+    }
     const currentTheme = localStorage.getItem('theme');
+    console.log('Current theme from localStorage:', currentTheme);
     if (currentTheme) {
         if (currentTheme === 'dark') {
+            console.log('Applying saved dark theme preference');
             toggleSwitch.checked = true;
             toggleDarkMode(true);
         }
     }
     else {
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            console.log('Applying system dark theme preference');
             toggleSwitch.checked = true;
             toggleDarkMode(true);
         }
     }
     toggleSwitch.addEventListener('change', function (e) {
-        toggleDarkMode(e.target.checked);
+        const isDark = e.target.checked;
+        console.log('Toggle switch changed:', isDark);
+        toggleDarkMode(isDark);
     });
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDarkMode);
+}
+else {
+    initDarkMode();
+}
+window.addEventListener('load', function () {
+    const toggleSwitch = document.querySelector('#checkbox');
+    if (toggleSwitch && !toggleSwitch.hasAttribute('data-initialized')) {
+        console.log('Initializing dark mode on window load (fallback)');
+        initDarkMode();
+        toggleSwitch.setAttribute('data-initialized', 'true');
+    }
 });
 
 
