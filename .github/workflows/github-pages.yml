@@ -54,4 +54,4 @@ jobs:
           folder: _site
           token: ${{ secrets.GITHUB_TOKEN }}
           clean: true
-          add: ["./js"]
+          add: ./js
