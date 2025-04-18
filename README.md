@@ -24,7 +24,7 @@ The build and deployment process is automated through GitHub Actions:
 - Jekyll builds the static site
 - Site is deployed to GitHub Pages
 
-**Note:** Currently, the bundle.js file is temporarily committed to the repository (in assets/js/) to ensure GitHub Pages compatibility. We'll revisit the CI/CD approach later.
+**Note:** We're currently working through an issue with how GitHub Pages deploys the site, which may result in a nested directory structure (/portfolio/portfolio/). Our GitHub Actions workflow handles this by placing assets in both possible locations.
 
 ### Manual Build
 
