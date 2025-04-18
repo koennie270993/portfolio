@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   entry: './src/browser-index.ts',
   module: {
     rules: [
@@ -20,5 +20,5 @@ module.exports = {
     path: path.resolve(__dirname, 'js'),
   },
   // Generate source maps for better debugging
-  devtool: 'source-map'
+  devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map'
 }; 

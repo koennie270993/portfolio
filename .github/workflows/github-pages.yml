@@ -21,7 +21,27 @@ jobs:
         run: npm ci
       
       - name: Build with webpack
-        run: npm run build:webpack
+        run: |
+          NODE_ENV=production npm run build:webpack
+          # Make sure the JS directory is not gitignored in CI
+          git checkout -- js/ || true
+        
+      - name: Debug directory structure
+        run: |
+          echo "Checking for js directory and bundle.js"
+          ls -la js/
+          echo "Current directory structure"
+          find . -type f -name "bundle.js" -o -name "*.js.map"
+      
+      - name: Ensure js directory is included for Jekyll
+        run: |
+          # Create a _includes/js directory if it doesn't exist
+          mkdir -p _includes/js
+          # Copy the bundle.js to _includes/js as a backup in case Jekyll doesn't pick it up from root js/
+          cp js/bundle.js _includes/js/ || echo "Failed to copy bundle.js"
+          # Also copy to root for absolute path reference
+          mkdir -p assets/js
+          cp js/bundle.js assets/js/ || echo "Failed to copy to assets/js"
       
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -33,10 +53,16 @@ jobs:
         run: bundle install
       
       - name: Build Jekyll site
-        run: bundle exec jekyll build
+        run: |
+          # Ensure the js directory is included in Jekyll build
+          bundle exec jekyll build
+          # Debug _site contents
+          echo "Contents of _site/js directory:"
+          ls -la _site/js/ || echo "No js directory found in _site!"
         
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: _site 
+          folder: _site
+          token: ${{ secrets.GITHUB_TOKEN }} 
