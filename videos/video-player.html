@@ -80,7 +80,7 @@
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const videoFile = urlParams.get('video') || 'fmv-video';
-        const imgPath = urlParams.get('img') || '/img/fmv/fmv.jpg';
+        const imgPath = urlParams.get('img') || '/img/fmv/fmv-optimized.jpg';
         
         // Set video sources - try both WebM and MP4
         const webmSource = document.getElementById('webmSource');
