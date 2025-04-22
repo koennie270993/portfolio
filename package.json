@@ -14,7 +14,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:gh-pages": "npm run build:webpack && bundle exec jekyll build",
     "build:production": "npm run build:webpack && bundle exec jekyll build",
-    "optimize-images": "node scripts/optimizeImages.js"
+    "optimize-images": "node scripts/optimizeImages.js",
+    "check-bundle": "node scripts/check-bundle-production.js"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.32",
