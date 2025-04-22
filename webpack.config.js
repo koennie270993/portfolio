@@ -1,5 +1,6 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const WebpackObfuscator = require('webpack-obfuscator');
 
 module.exports = {
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -37,4 +38,16 @@ module.exports = {
       }),
     ],
   },
+  plugins: [
+    ...(process.env.NODE_ENV === 'production' ? [
+      new WebpackObfuscator({
+        rotateStringArray: true,
+        stringArray: true,
+        stringArrayEncoding: ['base64'],
+        identifierNamesGenerator: 'hexadecimal',
+        renameGlobals: false,
+        selfDefending: true
+      }, ['excluded_bundle_name.js'])
+    ] : [])
+  ],
 }; 
