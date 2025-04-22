@@ -7,19 +7,11 @@ import 'jquery.easing';
 (window as any).jQuery = $;
 
 // Import modules
-import './dark-mode';
+import './darkMode';
 import './freelancer';
-import { runBackupCleanup } from './cleanup-backups';
-import './contact_me';
-import './contact_me_static';
-import './analytics-enhanced';
-import './video-player';
-import './image-optimizer';
-import './image-swap';
-import './image-update';
+import './contactMe';
+import './analyticsEnhanced';
+import './videoPlayer';
 import './classie';
 import './cbpAnimatedHeader';
 // Bootstrap and jqBootstrapValidation will be loaded from CDN
-
-// Run the backup cleanup
-runBackupCleanup();

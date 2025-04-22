@@ -2,9 +2,9 @@
 layout: default
 modal-id: 4
 date: 2019-07-31
-img: vr-csi.png
+img: vr-csi-optimized.png
 img_folder: vr-csi
-alt: VR CSI
+alt: VR CSI - Crime Scene Investigation
 project-date: July 2019
 tech_stack: Unity3D, C#, HTC Vive
 title: VR CSI

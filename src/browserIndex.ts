@@ -3,15 +3,14 @@ import $ from 'jquery';
 import 'jquery.easing';
 
 // Import all modules statically for webpack to include them
-import './dark-mode';
+import './darkMode';
 import './classie';
 import './cbpAnimatedHeader';
-import './image-swap';
 import './freelancer';
-import './contact_me';
-import './contact_me_static';
-import './analytics-enhanced';
-import './video-player';
+import './contactMe';
+// import './contact_me_static';
+import './analyticsEnhanced';
+import './videoPlayer';
 
 // Make jQuery available globally
 (window as any).$ = $;
@@ -126,5 +125,4 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   console.log('Portfolio site initialized with enhanced modal handlers');
-});
-
+}); 

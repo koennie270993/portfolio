@@ -9,41 +9,70 @@
  * http://www.codrops.com
  */
 
-import { classie } from './classie';
+import { ClassHelper } from './classie';
 
-var cbpAnimatedHeader = (function() {
+/**
+ * Animated header class for handling header animation on scroll
+ */
+export class AnimatedHeader {
+	private _docElem: HTMLElement;
+	private _header: Element | null;
+	private _didScroll: boolean = false;
+	private _changeHeaderOn: number = 300;
 
-	var docElem = document.documentElement,
-		header = document.querySelector( '.navbar-fixed-top' ),
-		didScroll = false,
-		changeHeaderOn = 300;
+	/**
+	 * Initialize the animated header
+	 */
+	constructor() {
+		this._docElem = document.documentElement;
+		this._header = document.querySelector('.navbar-fixed-top');
+		this._init();
+	}
 
-	function init() {
-		window.addEventListener( 'scroll', function( event ) {
-			if( !didScroll ) {
-				didScroll = true;
-				setTimeout( scrollPage, 250 );
+	/**
+	 * Static method to initialize the animated header
+	 */
+	public static init(): void {
+		new AnimatedHeader();
+	}
+
+	/**
+	 * Initialize scroll event listener
+	 */
+	private _init(): void {
+		window.addEventListener('scroll', () => {
+			if (!this._didScroll) {
+				this._didScroll = true;
+				setTimeout(() => this._scrollPage(), 250);
 			}
-		}, false );
+		}, false);
 	}
 
-	function scrollPage() {
-		var sy = scrollY();
-		if ( sy >= changeHeaderOn ) {
-			classie.add( header, 'navbar-shrink' );
+	/**
+	 * Handle scrolling page and header changes
+	 */
+	private _scrollPage(): void {
+		const sy = this._scrollY();
+		if (this._header) {
+			if (sy >= this._changeHeaderOn) {
+				ClassHelper.addClass(this._header, 'navbar-shrink');
+			} else {
+				ClassHelper.removeClass(this._header, 'navbar-shrink');
+			}
 		}
-		else {
-			classie.remove( header, 'navbar-shrink' );
-		}
-		didScroll = false;
+		this._didScroll = false;
 	}
 
-	function scrollY() {
-		return window.pageYOffset || docElem.scrollTop;
+	/**
+	 * Get current scroll position
+	 */
+	private _scrollY(): number {
+		return window.pageYOffset || this._docElem.scrollTop;
 	}
+}
 
-	init();
+// Initialize the animated header
+AnimatedHeader.init();
 
-})();
-
-export default cbpAnimatedHeader;
+// Export for compatibility with existing code
+export default AnimatedHeader;

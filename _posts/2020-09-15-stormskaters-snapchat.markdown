@@ -2,7 +2,7 @@
 layout: default
 modal-id: 3
 date: 2020-09-15
-img: stormskaters.png
+img: stormskater1s-optimized.jpg
 img_folder: storm-skaters
 alt: Stormskaters Snapchat
 project-date: September 2020

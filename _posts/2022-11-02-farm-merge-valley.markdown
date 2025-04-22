@@ -2,7 +2,7 @@
 layout: default
 modal-id: 1
 date: 2022-11-02
-img: fmv.jpg
+img: fmv-optimized.jpg
 img_folder: fmv
 alt: Farm Merge Valley
 project-date: November 2022

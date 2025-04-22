@@ -11,7 +11,8 @@
     "watch:jekyll": "bundle exec jekyll serve",
     "watch": "npm-run-all --parallel watch:*",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:gh-pages": "npm run build:webpack && bundle exec jekyll build"
+    "build:gh-pages": "npm run build:webpack && bundle exec jekyll build",
+    "optimize-images": "node scripts/optimizeImages.js"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.32",

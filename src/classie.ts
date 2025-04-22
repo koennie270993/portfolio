@@ -8,71 +8,74 @@
  * classie.toggle( elem, 'my-class' )
  */
 
-/*jshint browser: true, strict: true, undef: true */
-/*global define: false */
+/**
+ * ClassHelper utility class for DOM element class manipulation
+ */
+export class ClassHelper {
+  /**
+   * Check if an element has a specific class
+   */
+  public static hasClass(elem: Element, className: string): boolean {
+    if ('classList' in document.documentElement) {
+      return elem.classList.contains(className);
+    } else {
+      return this._classReg(className).test(elem.className);
+    }
+  }
 
-// Class helper functions
-// classie.has( elem, 'my-class' ) -> true/false
-// classie.add( elem, 'my-class' )
-// classie.remove( elem, 'my-class' )
-// classie.toggle( elem, 'my-class' )
+  /**
+   * Add a class to an element
+   */
+  public static addClass(elem: Element, className: string): void {
+    if ('classList' in document.documentElement) {
+      elem.classList.add(className);
+    } else {
+      if (!this.hasClass(elem, className)) {
+        elem.className = elem.className + ' ' + className;
+      }
+    }
+  }
 
-// Export classie as a module for TypeScript
-export const classie = (function() {
-  'use strict';
+  /**
+   * Remove a class from an element
+   */
+  public static removeClass(elem: Element, className: string): void {
+    if ('classList' in document.documentElement) {
+      elem.classList.remove(className);
+    } else {
+      elem.className = elem.className.replace(this._classReg(className), ' ');
+    }
+  }
 
-  function classReg( className: string ) {
+  /**
+   * Toggle a class on an element
+   */
+  public static toggleClass(elem: Element, className: string): void {
+    const fn = this.hasClass(elem, className) ? this.removeClass : this.addClass;
+    fn.call(this, elem, className);
+  }
+  
+  /**
+   * Create a regular expression for matching class names
+   */
+  private static _classReg(className: string): RegExp {
     return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
   }
 
-  // classList support for class management
-  // altho to be fair, the api sucks because it won't accept multiple classes at once
-  let hasClass, addClass, removeClass;
+}
 
-  if ( 'classList' in document.documentElement ) {
-    hasClass = function( elem: Element, c: string ) {
-      return elem.classList.contains( c );
-    };
-    addClass = function( elem: Element, c: string ) {
-      elem.classList.add( c );
-    };
-    removeClass = function( elem: Element, c: string ) {
-      elem.classList.remove( c );
-    };
-  }
-  else {
-    hasClass = function( elem: Element, c: string ) {
-      return classReg( c ).test( elem.className );
-    };
-    addClass = function( elem: Element, c: string ) {
-      if ( !hasClass( elem, c ) ) {
-        elem.className = elem.className + ' ' + c;
-      }
-    };
-    removeClass = function( elem: Element, c: string ) {
-      elem.className = elem.className.replace( classReg( c ), ' ' );
-    };
-  }
+// Export the ClassHelper as 'classie' for backwards compatibility
+export const classie = {
+  hasClass: ClassHelper.hasClass.bind(ClassHelper),
+  addClass: ClassHelper.addClass.bind(ClassHelper),
+  removeClass: ClassHelper.removeClass.bind(ClassHelper),
+  toggleClass: ClassHelper.toggleClass.bind(ClassHelper),
+  // short names for backwards compatibility
+  has: ClassHelper.hasClass.bind(ClassHelper),
+  add: ClassHelper.addClass.bind(ClassHelper),
+  remove: ClassHelper.removeClass.bind(ClassHelper),
+  toggle: ClassHelper.toggleClass.bind(ClassHelper)
+};
 
-  function toggleClass( elem: Element, c: string ) {
-    var fn = hasClass( elem, c ) ? removeClass : addClass;
-    fn( elem, c );
-  }
-
-  return {
-    // full names
-    hasClass: hasClass,
-    addClass: addClass,
-    removeClass: removeClass,
-    toggleClass: toggleClass,
-    // short names
-    has: hasClass,
-    add: addClass,
-    remove: removeClass,
-    toggle: toggleClass
-  };
-
-})();
-
-// Make classie available globally
+// Make classie available globally for backwards compatibility
 (window as any).classie = classie;
